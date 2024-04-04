@@ -8,8 +8,8 @@ export const getUsers = async () => {
   return await db.select().from(users);
 };
 
-export const createJob = async (values: User) => {
+export const createUser = async (values: User) => {
   await db.insert(users).values(values);
 
-  revalidatePath("/jobs");
+  revalidatePath("/");
 };

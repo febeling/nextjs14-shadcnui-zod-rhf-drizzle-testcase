@@ -11,12 +11,8 @@ export default async function Home() {
       <div className="py-4">
         {users.map(user => {
           return (
-            <div key={user.id}>
-              {user.name} - {user.email}{" "}
-              <Button className="ml-2" size={"sm"}>
-                Edit
-              </Button>{" "}
-              <Button size={"sm"}>Delete</Button>
+            <div key={user.id} className="my-2">
+              {user.name} - {user.email}
             </div>
           );
         })}

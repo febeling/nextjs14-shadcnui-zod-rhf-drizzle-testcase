@@ -1,6 +1,7 @@
 pnpm create next-app
 
 pnpm add react-hook-form drizzle-orm drizzle-zod zod @libsql/client
+pnpm add @hookform/resolvers
 
 pnpm add -D drizzle-kit
 
