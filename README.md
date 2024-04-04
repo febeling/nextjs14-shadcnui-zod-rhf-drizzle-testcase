@@ -37,21 +37,23 @@ src/app/new/page.tsx:70:25 - error TS2322: Type 'string | null | undefined' is n
 Found 1 error in src/app/new/page.tsx:70
 ```
 
+In short, for field `email` the user model has type `string | null | undefined` (derived from the db schema), while the form field can't handle the `null` and expects `string | readonly string[] | number | undefined` instead.
+
 Secondly, in new records always containing empty string where there is no input.
 
-## Motivation
+## Are we on the right track?
 
-Usually we want nullable database columns for string fields in order to make queries simpler (e.g. `WHERE email IS NULL`).
+Is it correct to have a nullable database column? Yes, usually we want nullable database columns for string fields in order to make queries simpler (e.g. `WHERE email IS NULL`).
 
 ## Workaround
 
-It is possible to change the code in line 70 (see above) to this follwing.
+There are workarounds. It is possible to change the code in line 70 (see above) to the follwing, and slience the warning:
 
 ```jsx
     value={field.value ?? ''}
 ```
 
-That makes the typechecker happy and remove the warning. But it shouldn't be necessary when types are correct.
+That makes the typechecker happy and removes the warning. But it shouldn't be necessary when types are correct, and we go to all that length for them.
 
 For the second part, it is possible to transform during validation by using the `refine` feature of Zod. This is the code to add to `src/lib/schema.ts`.
 
@@ -66,3 +68,5 @@ export const InsertJobSchema = createInsertSchema(jobs, {
 ```
 
 The function `createInsertSchema` is imported from `drizzle-zod`, a package by the Drizzle team.
+
+This transform would need to be applied to each field that is nullable.
