@@ -52,9 +52,6 @@ export default function NewUser() {
                   <FormItem className="pb-2">
                     <FormLabel>Name</FormLabel>
                     <FormControl>
-                      {/*
-                      this field stores into a NOTNULL db column, so no warning
-                      */}
                       <Input placeholder="Enter name" {...field} />
                     </FormControl>
                     <FormMessage />
@@ -68,16 +65,9 @@ export default function NewUser() {
                   <FormItem className="pb-2">
                     <FormLabel>Email</FormLabel>
                     <FormControl>
-                      {/*
-                      this field stores in a column accepting NULL values
-                      and this breaks the drizzle/zod/shadcn-form formula
-                      */}
                       <Input
                         {...field}
-                        value={field.value}
-                        /// ^ this warning is what it's all about
-                        // it can be worked around by `field.value ?? ''` but that's not
-                        // we wanted in the first place
+                        value={field.value} // <-
                         placeholder="Your email here"
                       />
                     </FormControl>
