@@ -1,19 +1,56 @@
-pnpm create next-app
+# README
 
-pnpm add react-hook-form drizzle-orm drizzle-zod zod @libsql/client
-pnpm add @hookform/resolvers
+## Issue
 
-pnpm add -D drizzle-kit
+Typesafe editing of model entities nullable text fields.
 
-mv ./drizzle.config.ts ...
+This app reproduces this problem in a somewhat minimal way. It's built using Nextjs 14, Drizzle ORM, Zod validations derived from schema, Shadcn/ui forms, react-hook-form for a minimal CRUD UI.
 
-pnpm dlx shadcn-ui@latest init
-pnpm dlx shadcn-ui@latest add form input
+## Goal
 
-npx drizzle-kit push:sqlite
+The goal is typesafety from the UI to the database schema, while creating, validating, and editing database entries.
 
----
+## Problem
 
-add user list
-add New form
-add submit and createUser action
+The form fields in Shadcn-ui/react-hook-form don't allow null values. This isn't surprising, because text inputs can't represent them any different from empty strings. But this conflicts with what the database derived validation schema and types expect.
+
+It results in type errors and plenty of empty strings in the database.
+
+## What to look for?
+
+This problem manifests itself in two ways; firstly this warning
+
+```shell
+npx tsc --noEmit
+src/app/new/page.tsx:70:25 - error TS2322: Type 'string | null | undefined' is not assignable to type 'string | number | readonly string[] | undefined'.
+  Type 'null' is not assignable to type 'string | number | readonly string[] | undefined'.
+
+70                         value={field.value} // <-
+                           ~~~~~
+
+  node_modules/.pnpm/@types+react@18.2.74/node_modules/@types/react/index.d.ts:3332:9
+    3332         value?: string | readonly string[] | number | undefined;
+                 ~~~~~
+    The expected type comes from property 'value' which is declared here on type 'IntrinsicAttributes & InputProps & RefAttributes<HTMLInputElement>'
+
+
+Found 1 error in src/app/new/page.tsx:70
+```
+
+Secondly, in new records always containing empty string where there is no input.
+
+## Motivation
+
+Usually we want nullable database columns for string fields in order to make queries simpler (e.g. `WHERE email IS NULL`).
+
+## Workaround
+
+It is possible to change the code in line 70 (see above) to this follwing.
+
+```jsx
+    value={field.value ?? ''}
+```
+
+That makes the typechecker happy and remove the warning. But it shouldn't be necessary when types are correct.
+
+For the second part, it is possible to transform during validation by using the `refine` feature of Zod. This is the code to add to `src/lib/schema.ts`.
