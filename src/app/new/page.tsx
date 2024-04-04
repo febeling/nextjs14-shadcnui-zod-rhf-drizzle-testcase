@@ -69,7 +69,7 @@ export default function NewUser() {
                     <FormControl>
                       <Input
                         {...field}
-                        value={field.value} // <-
+                        value={field.value} // <- How to fix this warning?
                         placeholder="Your email here"
                       />
                     </FormControl>
