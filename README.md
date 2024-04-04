@@ -2,7 +2,7 @@
 
 ## Issue
 
-Typesafe editing of model entities nullable text fields.
+Reproduce a problem with typesafe editing of model entities nullable text fields.
 
 This app reproduces this problem in a somewhat minimal way. It's built using Nextjs 14, Drizzle ORM, Zod validations derived from schema, Shadcn/ui forms, react-hook-form for a minimal CRUD UI.
 
