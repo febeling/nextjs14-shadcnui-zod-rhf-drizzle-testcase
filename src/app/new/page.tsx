@@ -16,6 +16,7 @@ import Link from "next/link";
 import { useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { createUser } from "../actions";
+import { redirect } from "next/navigation";
 
 export default function NewUser() {
   const [, startTransition] = useTransition();
@@ -35,6 +36,7 @@ export default function NewUser() {
     startTransition(async () => {
       await createUser(values);
       console.log(`✅ User created`);
+      redirect("/");
     });
   }
 
