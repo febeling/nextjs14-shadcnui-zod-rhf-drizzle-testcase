@@ -54,3 +54,15 @@ It is possible to change the code in line 70 (see above) to this follwing.
 That makes the typechecker happy and remove the warning. But it shouldn't be necessary when types are correct.
 
 For the second part, it is possible to transform during validation by using the `refine` feature of Zod. This is the code to add to `src/lib/schema.ts`.
+
+```ts
+const nullifyEmptyString = (value: string) =>
+  typeof value === "string" && value.length === 0 ? null : value;
+
+export const InsertJobSchema = createInsertSchema(jobs, {
+  description: schema =>
+    schema.description.trim().transform(nullifyEmptyString),
+});
+```
+
+The function `createInsertSchema` is imported from `drizzle-zod`, a package by the Drizzle team.
