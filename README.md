@@ -10,3 +10,9 @@ pnpm dlx shadcn-ui@latest init
 pnpm dlx shadcn-ui@latest add form input
 
 npx drizzle-kit push:sqlite
+
+---
+
+add user list
+add New form
+add submit and createUser action
